@@ -119,6 +119,14 @@ def self_test() -> int:
         problems.append("pick has leading/trailing whitespace")
     if text.count(".") != 1 or not text.endswith("."):
         problems.append("pick is not exactly one sentence")
+    # The brief forbids apology and confession: the pick must carry
+    # neither. Check the words a cat would never say, so a later edit
+    # cannot smuggle one in unnoticed.
+    lowered = text.lower()
+    for banned in ("sorry", "apologise", "apologize", "my fault",
+                   "i confess", "forgive me", "my mistake"):
+        if banned in lowered:
+            problems.append(f"pick contains forbidden phrase {banned!r}")
     for i, cand in enumerate(CONTENDERS, 1):
         if not 1 <= len(cand) <= 200:
             problems.append(f"contender {i} is {len(cand)} chars")
